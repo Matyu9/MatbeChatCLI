@@ -32,14 +32,18 @@ c.execute('''CREATE TABLE IF NOT EXISTS log_chat (timestamp text, username text,
 user = []  # list of users
 
 
-# create a function 'broadcast' to send messages to all connected clients
-def broadcast(message):
+# create a function 'broadcast' to send messages to all connected clients, the argument name is a
+def broadcast(message, name):
     # iterate over the list of clients
     for client in user:
         # if client is the sender, skip it
         if client != s:
-            # send the message to the client
-            client.send(message)
+            # send the username, message and the time to the client like this: time: username: message
+            to_send = time.strftime("%H:%M:%S") + ": " + str(name) + ": " + message
+            client.send(to_send.encode('utf-8'))
+
+            # print the message to the server console
+            print(message.decode("utf-8"))
         else:
             continue
 
@@ -90,9 +94,10 @@ class ClientThread(threading.Thread):
                 # commit the changes
                 conn.commit()
                 # send the message to all clients
-                broadcast(message)
-                # print the message
-                print(message.decode())
+                broadcast(message, name)
+                # print the username, the message and the time
+                print(time.strftime("%d/%m/%Y"), ":", str(name), ":", message.decode())
+
 
 # we will use the IP address of the server
 # we will use the port number
