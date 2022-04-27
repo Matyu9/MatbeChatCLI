@@ -11,7 +11,6 @@ import threading
 import time
 import random
 import sqlite3
-import hashlib
 
 # create a socket object
 # AF_INET is the address family
@@ -47,6 +46,7 @@ def broadcast(message, name):
         else:
             continue
 
+
 # we will create a class for clients that will use threads
 class ClientThread(threading.Thread):
     def __init__(self, clientAddress, clientsocket):
@@ -71,7 +71,7 @@ class ClientThread(threading.Thread):
             if not message:
                 end_message = "Client %s is offline" % str(name)
                 print(end_message)
-                broadcast(end_message.encode())
+                broadcast(end_message.encode(), name)
                 # remove the client from the list of clients
                 user.remove(self.csocket)
                 # close the connection with the client
@@ -83,11 +83,11 @@ class ClientThread(threading.Thread):
                 if message.decode() == 'quit':
                     end_message = "Client %s is offline" % str(name)
                     print(end_message)
-                    broadcast(end_message.encode())
+                    broadcast(end_message.encode(), name)
                     # remove the client from the list of clients
                     user.remove(self.csocket)
                     # close the connection with the client
-                    ClientThread.csocket.close()
+                    csocket.close()
                     break
                 # insert the message to the database
                 c.execute("INSERT INTO log_chat VALUES (?,?,?)", (time.strftime("%d/%m/%Y"), str(name), message.decode()))

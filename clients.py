@@ -11,6 +11,7 @@ import socket
 import threading
 import hashlib
 
+
 # create the class for the client thread
 class ClientThread(threading.Thread):
     def __init__(self, client_socket, client_address):
