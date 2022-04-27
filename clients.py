@@ -9,7 +9,6 @@
 
 import socket
 import threading
-import hashlib
 
 
 # create the class for the client thread
@@ -23,16 +22,16 @@ class ClientThread(threading.Thread):
         # while loop to receive messages from the server
         while True:
             # receive the message from the server
-            message = self.client_socket.recv(1024).decode()
+            messages = self.client_socket.recv(1024).decode()
             # if the message is empty, the client has disconnected
-            if message == '':
+            if messages == '':
                 break
 
             # print the message
-            print(message)
+            print(messages)
 
 
-# create a socket object
+# create a socket object 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # create a tuple with the ip and port
